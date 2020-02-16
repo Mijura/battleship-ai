@@ -25,12 +25,25 @@ class Board:
     def is_busy(self, x, y):
         return self.table[x][y] != 0
     
-    def is_cross(self, main_coord, secondary_coord, ship_length):
-        return False #TODO
+    def is_cross(self, x, y, ship_length, horizontal):
+        if (horizontal):
+            for i in range(x, x + ship_length):
+                if (self.table[i][y] != 0):
+                    return True
+        else:
+            for i in range(y, y + ship_length):
+                if (self.table[x][i] != 0):
+                    return True
 
-    def place_ship(self, main_coord, secondary_coord, ship_id, ship_length):
-        for mc in range(main_coord, main_coord + ship_length):
-            self.table[mc][secondary_coord] = ship_id
+        return False
+
+    def place_ship(self, x, y, ship_id, ship_length, horizontal):
+        if (horizontal):
+            for i in range(x, x + ship_length):
+                self.table[i][y] = ship_id
+        else:
+            for i in range(y, y + ship_length):
+                self.table[x][i] = ship_id
 
     def add_ship(self, ship):
         placed = False
@@ -39,16 +52,10 @@ class Board:
             if(horizontal):
                 x = rd.randint(0, self.board_size - ship['length'] -1)
                 y = rd.randint(0, self.board_size - 1)
-                if(not self.is_busy(x, y) and not self.is_cross( x, y, ship['length'])):
-                    self.place_ship(x, y, ship['id'], ship['length'])
-                    placed = True
             else:
                 x = rd.randint(0, self.board_size - 1)
                 y = rd.randint(0, self.board_size - ship['length'] -1)
-                if(not self.is_busy(x, y) and not self.is_cross( y, x, ship['length'])):
-                    self.place_ship(y, x, ship['id'], ship['length'])
-                    placed = True
-
-board = Board()
-for row in board.table:
-    print(row)
+            
+            if(not self.is_busy(x, y) and not self.is_cross(x, y, ship['length'], horizontal)):
+                self.place_ship(x, y, ship['id'], ship['length'], horizontal)
+                placed = True
