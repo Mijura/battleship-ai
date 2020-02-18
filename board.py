@@ -7,14 +7,17 @@ class Board:
         self.board_size = 10
 
         self.table = self.create_empty_table()
-        self.ships = [ {'length': 5, 'id': 'c', 'name': 'Carrier'},
-                       {'length': 4, 'id': 'b', 'name': 'Battleship'},
-                       {'length': 3, 'id': 'd', 'name': 'Destroyer'},
-                       {'length': 3, 'id': 's', 'name': 'Submarine'},
-                       {'length': 2, 'id': 'p', 'name': 'Patrol Boat'}]
-        
-        for board in self.ships:
-            self.add_ship(board)
+        self.opened = []
+        self.ships = {
+            'c': {'length': 5, 'name': 'Carrier'},
+            'b': {'length': 4, 'name': 'Battleship'},
+            'd': {'length': 3, 'name': 'Destroyer'},
+            's': {'length': 3, 'name': 'Submarine'},
+            'p': {'length': 2, 'name': 'Patrol Boat'}
+        }
+
+        for id, ship in self.ships.items():
+            self.add_ship(id, ship)
 
     def create_empty_table(self):
         table = []
@@ -45,7 +48,7 @@ class Board:
             for i in range(y, y + ship_length):
                 self.table[x][i] = ship_id
 
-    def add_ship(self, ship):
+    def add_ship(self, id, ship):
         placed = False
         while(not placed):
             horizontal = rd.choice([True, False])
@@ -57,5 +60,28 @@ class Board:
                 y = rd.randint(0, self.board_size - ship['length'] -1)
             
             if(not self.is_busy(x, y) and not self.is_cross(x, y, ship['length'], horizontal)):
-                self.place_ship(x, y, ship['id'], ship['length'], horizontal)
+                self.place_ship(x, y, id, ship['length'], horizontal)
                 placed = True
+
+    def open_field(self, x, y):
+        field_value = self.table[x][y]
+        coord = (x, y)
+        already_opened = coord in self.opened  
+
+        if(not already_opened):
+            self.opened.append(coord)
+            if(field_value!=0):
+                self.ships[field_value]['length'] -= 1
+        
+        return field_value, already_opened
+
+    def remaining_targets(self):
+        count = 0
+        for k, v in self.ships.items():
+            count += v['length']
+        return count
+
+    def random_field(self):
+        x = rd.randint(0, self.board_size - 1)
+        y = rd.randint(0, self.board_size - 1)
+        return x, y
