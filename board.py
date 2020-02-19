@@ -64,6 +64,9 @@ class Board:
                 placed = True
 
     def open_field(self, x, y):
+        if (x==self.board_size or y==self.board_size or x==-1 or y==-1):
+            return None, None
+
         field_value = self.table[x][y]
         coord = (x, y)
         already_opened = coord in self.opened  
