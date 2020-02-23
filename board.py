@@ -68,14 +68,17 @@ class Board:
             return None, None
 
         field_value = self.table[x][y]
+
         coord = (x, y)
         already_opened = coord in self.opened  
 
         if(not already_opened):
             self.opened.append(coord)
             if(field_value!=0):
+                print("pogdak " + str (x) +" " +str(y) + " " +str(field_value))
+                
                 self.ships[field_value]['length'] -= 1
-        
+
         return field_value, already_opened
 
     def remaining_targets(self):
