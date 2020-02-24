@@ -25,10 +25,7 @@ class Hunt(Player):
         return x, y, value, already_opened
     
     def open_random_field(self):
-        already_opened = True
-        while(already_opened):
-            x, y = self.board.random_field()
-            value, already_opened = self.board.open_field(x, y)
+        x, y, value, already_opened = self.get_random_field()
         
         hit = (x, y)
         if(value in self.board.ships.keys() and hit not in self.hits):
