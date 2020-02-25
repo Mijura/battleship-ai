@@ -4,7 +4,7 @@ from qagent import Qagent
 
 
 
-game_repeat = 100
+game_repeat = 10000
 counts = []
 for i in range(0, game_repeat):
     count = 0
@@ -12,10 +12,8 @@ for i in range(0, game_repeat):
     player = Qagent(board1)
     while(board1.remaining_targets()!=0):
         rt = board1.remaining_targets()
-        #print(rt)
         player.move()
         count +=1
-    #print("count " +str(count))
     print("---------")
     counts.append(count)
 print("PROSEK: " + str(sum(counts)/game_repeat))

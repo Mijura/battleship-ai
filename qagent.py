@@ -9,9 +9,8 @@ class Qagent(Player):
     def __init__(self, board):
         super().__init__(board)
         self.directions = [(-1, 0), (1, 0), (0, 1), (0, -1)]
-        self.qtable = pd.DataFrame(np.zeros((10, 10)), dtype='int')
-        self.random_explore = 0.8
-        self.count = 0
+        self.qtable = pd.DataFrame(np.zeros((10, 10)), dtype='int') #tabela nagrada
+        self.random_explore = 0.8 #procenat za nasumicno gadjanje (smanjuje se tokom igranja)
     
     def find_coord_with_reward(self, reward):
         for i in range (0, len(self.qtable)):
@@ -20,8 +19,8 @@ class Qagent(Player):
                     return i, j
 
     def update_table(self, x, y, value):
-        self.qtable[x][y] = -1
-        if(value in self.board.ships.keys()):
+        self.qtable[x][y] = -1 
+        if(value in self.board.ships.keys()): #ukoliko je doslo do pogotka obilazi okolne pozicije i dodeljuje im nagradu
             for direction in self.directions:
                 new_x = x + direction[0]
                 new_y = y + direction[1]
@@ -30,9 +29,9 @@ class Qagent(Player):
                     self.qtable[new_x][new_y]=5
 
     def move(self):
-        max_reward = self.qtable.max().max()
-        self.count += 1
-        if(self.random_explore>0):
+        max_reward = self.qtable.max().max() #pronalazak polja sa najvecom nagradom u tabeli nagrada
+ 
+        if(self.random_explore>0):#smanjivanje nasumicnog gadjanja
             self.random_explore -= 0.1
 
         if(max_reward==0 or random.random() < self.random_explore):
