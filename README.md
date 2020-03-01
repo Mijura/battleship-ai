@@ -1,1 +1,1 @@
-# reinforecment-learning-battleship
+# battleship-ai
